@@ -1,12 +1,18 @@
 import 'package:evently/ui/screens/register/register_screen.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
+import 'package:evently/ui/utils/app_dialogs.dart';
 import 'package:evently/ui/utils/app_routes.dart';
 import 'package:evently/ui/widgets/app_button.dart';
 import 'package:evently/ui/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import '../../utils/app_styles.dart';
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,9 +57,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 48),
-                AppButton(text: "Login", onPress: (){
-                 Navigator.push(context,AppRoutes.navigationScreen);
-                },),
+                buildLoginButton(),
                 SizedBox(height: 37),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -81,6 +85,19 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  AppButton buildLoginButton() {
+    return AppButton(text: "Login",
+      onPress: () async {
+      showLoading(context);
+      await Future.delayed(Duration(seconds: 1));
+        Navigator.pop(context);
+        showMessage(context,"Please try again later", title: "Error",negText: "cancel",posText: "ok");
+      },
+
+
     );
   }
 }
