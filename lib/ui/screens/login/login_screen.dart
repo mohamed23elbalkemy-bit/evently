@@ -1,3 +1,4 @@
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/ui/screens/register/register_screen.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
@@ -15,6 +16,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+    var localization = AppLocalizations.of(context)!;
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.offWhite,
@@ -27,16 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 10),
                 Image.asset(AppAssets.appLogo),
                 SizedBox(height: 48),
-                Text("Login to your account", style: AppStyles.blue24SemiBold),
+                Text(localization.loginHeaderMessage, style: AppStyles.blue24SemiBold),
                 SizedBox(height: 24),
                 AppTextField(
-                  hint: "Enter your email",
+                  hint: localization.emailHint,
                   isPasswordField: false,
                   prefixIcon: Image.asset(AppAssets.icEmail),
                 ),
                 SizedBox(height: 16),
                 AppTextField(
-                  hint: "Enter your password",
+                  hint: localization.passwordHint,
                   isPasswordField: true,
                   prefixIcon: Image.asset(AppAssets.icLock),
                   suffixIcon: Image.asset(AppAssets.icEyeClosed),
@@ -47,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(context, AppRoutes.forGetPassword);
                   },
                   child: Text(
-                    "Forget Password?",
+                    localization.forgetPassword,
                     style: AppStyles.blue14SemiBold.copyWith(
                       decoration: TextDecoration.underline,
                       decorationColor : AppColors.blue,
@@ -62,20 +64,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                  Text("Don’t have an account ?  ",style: AppStyles.gray14Regular,),
+                  Text(localization.dontHaveAccount,style: AppStyles.gray14Regular,),
                   InkWell(
                     onTap: (){
                       Navigator.push(context,AppRoutes.registerScreen);
                     },
-                    child: Text("Signup",style: AppStyles.blue14SemiBold.copyWith(decoration:TextDecoration.underline,decorationColor : AppColors.blue,
+                    child: Text(localization.signUp,style: AppStyles.blue14SemiBold.copyWith(decoration:TextDecoration.underline,decorationColor : AppColors.blue,
                       decorationThickness: 2,  ),),
                   )
                 ],),
                 SizedBox(height: 37),
-                Text("Or",style: AppStyles.blue18Medium,textAlign: TextAlign.center,),
+                Text(localization.or,style: AppStyles.blue18Medium,textAlign: TextAlign.center,),
                 SizedBox(height: 37),
                 AppButton(
-                    text: "Login with Google", onPress: (){},
+                    text: localization.googleLogin, onPress: (){},
                   backgroundColor: AppColors.white,
                   textStyle: AppStyles.blue18Medium,
                   icon: Image.asset(AppAssets.icGmail),
@@ -89,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   AppButton buildLoginButton() {
-    return AppButton(text: "Login",
+    return AppButton(text: AppLocalizations.of(context)!.login,
       onPress: () async {
       showLoading(context);
       await Future.delayed(Duration(seconds: 1));

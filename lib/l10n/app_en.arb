@@ -1,0 +1,12 @@
+{
+  "login": "Login",
+  "loginHeaderMessage": "Login to your account",
+  "emailHint": "Enter your email",
+  "passwordHint": "Enter your password",
+  "forgetPassword": "Forget Password?",
+  "dontHaveAccount": "Don't have an account ?",
+  "signUp": "Signup",
+  "or": "Or",
+  "googleLogin": "Login with Google",
+  "register": "Register"
+}
