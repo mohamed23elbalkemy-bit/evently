@@ -8,8 +8,9 @@ class AppTextField extends StatelessWidget{
   final Widget? suffixIcon;
   final String hint;
   final bool isPasswordField;
+  final int minLines;
 
-  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false });
+  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false ,this.minLines=1});
   @override
   Widget build(BuildContext context) {
     var border=OutlineInputBorder(
@@ -30,6 +31,8 @@ class AppTextField extends StatelessWidget{
          fillColor: AppColors.white,
          filled: true,
        ),
+       minLines: minLines,
+       maxLines: minLines == 1 ? 1 : null,
        obscureText: isPasswordField,
        cursorColor: AppColors.blue,
      );

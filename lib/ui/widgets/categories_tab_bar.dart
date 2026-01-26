@@ -24,6 +24,7 @@ class _CategoriesTabBarState extends State<CategoriesTabBar> {
         child: TabBar(
           tabAlignment: TabAlignment.start,
             indicatorColor: Colors.transparent,
+            dividerColor:Colors.transparent ,
             onTap: (index){
               selectedIndex=index;
               widget.onChanged(widget.categories[index]);
