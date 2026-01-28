@@ -1,4 +1,5 @@
-import 'package:evently/ui/event_dm.dart';
+import 'package:evently/ui/model/event_dm.dart';
+import 'package:evently/ui/model/user_dm.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_styles.dart';
 import 'package:evently/ui/utils/constants.dart';
@@ -39,7 +40,7 @@ class HomeTab extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 6,horizontal: 8),
           )
         ],),
-        Text("John Safwat",style: AppStyles.black20Medium,textAlign: TextAlign.start,),
+        Text(UserDm.currentUser!.name,style: AppStyles.black20Medium,textAlign: TextAlign.start,),
       ],
     );
   }
@@ -60,7 +61,7 @@ class HomeTab extends StatelessWidget {
           itemCount: 100,
           itemBuilder: (context,index){
             var category = CategoryDM(name: "Sports", icon: Icons.bike_scooter, imagePath: AppAssets.sportLight);
-            var eventDm = EventDm(category: category, dateTime: DateTime.now(), title: "Meeting for Updating The Development Method", description: "",isFavorite: true);
+            var eventDm = EventDm(ownerId:"", category: category, dateTime: DateTime.now(), title: "Meeting for Updating The Development Method", description: "" );
             return  EventWidget(eventDm:eventDm,);
           }),
     );

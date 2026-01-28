@@ -1,8 +1,10 @@
+import 'package:evently/ui/model/user_dm.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
 import 'package:evently/ui/utils/app_dialogs.dart';
 import 'package:evently/ui/utils/app_styles.dart';
 import 'package:evently/ui/utils/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently/ui/widgets/app_button.dart';
 import 'package:evently/ui/widgets/app_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +21,10 @@ class RegisterScreen extends StatefulWidget{
 class _RegisterScreenState extends State<RegisterScreen> {
   final emailController =TextEditingController();
   final passwordController= TextEditingController();
+  final nameController =TextEditingController();
+  final addressController= TextEditingController();
+  final phoneNumberController =TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                SizedBox(height: 20),
                Text("Create your account",style: AppStyles.blue24SemiBold,),
                SizedBox(height: 25),
-               AppTextField(hint: "Enter your name",prefixIcon:Image.asset(AppAssets.icPerson),),
+               AppTextField(hint: "Enter your name",prefixIcon:Image.asset(AppAssets.icPerson),controller: nameController,),
+               SizedBox(height: 14),
+               AppTextField(hint: "Enter your address",prefixIcon:Icon(Icons.house_siding),controller: addressController,),
+               SizedBox(height: 14),
+               AppTextField(hint: "Enter your phone number",prefixIcon:Icon(Icons.phone_android),controller: phoneNumberController,),
                SizedBox(height: 14),
                AppTextField(hint: "Enter your email",prefixIcon:Image.asset(AppAssets.icEmail),controller: emailController,),
                SizedBox(height: 14),
@@ -69,7 +79,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
      ),
    );
   }
-
+  Future<void> createUserInFirestore(UserDm user)async {
+    var userCollection = FirebaseFirestore.instance.collection("users");
+      var emptyDoc= userCollection.doc(user.id);
+      emptyDoc.set(
+          {
+            "id":user.id,
+            "name":user.name,
+            "address":user.address,
+            "phone_number":user.phoneNumber,
+            "email":user.email,
+            "favorites":user.favoriteEvents
+          }
+    );
+  }
   AppButton buildRegisterButton(BuildContext context) {
     return AppButton(text: "Sign up", onPress: () async {
                try {
@@ -78,6 +101,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                    email: emailController.text,
                    password: passwordController.text,
                  );
+                 UserDm.currentUser=UserDm(
+                     id: credential.user!.uid,
+                     address: addressController.text,
+                     phoneNumber: phoneNumberController.text,
+                     name: nameController.text,
+                     email: emailController.text
+                 );
+                 createUserInFirestore(UserDm.currentUser!);
                  Navigator.pop(context);
                  Navigator.push(context, AppRoutes.navigationScreen);
                } on FirebaseAuthException catch (e) {

@@ -1,4 +1,4 @@
-import 'package:evently/ui/event_dm.dart';
+import 'package:evently/ui/model/event_dm.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
 import 'package:evently/ui/utils/app_styles.dart';
@@ -21,6 +21,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   CategoryDM selectedCategory = AppConstants.customCategories[0];
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
+  TextEditingController titleController= TextEditingController();
+  TextEditingController descriptionController= TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,7 +63,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     textAlign: TextAlign.start,
                   ),
                   SizedBox(height: 8),
-                  AppTextField(hint: "Event Title"),
+                  AppTextField(hint: "Event Title",controller: titleController,),
                   SizedBox(height: 8),
                   Text(
                     "Description",
@@ -69,7 +71,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     textAlign: TextAlign.start,
                   ),
                   SizedBox(height: 8),
-                  AppTextField(hint: "Event Description....", minLines: 3),
+                  AppTextField(hint: "Event Description....", minLines: 3,controller: descriptionController,),
                   SizedBox(height: 12),
                   buildChooseDateRow(),
                   SizedBox(height: 8),
@@ -139,6 +141,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   buildAddEventButton() {
-    return AppButton(text: "Add event", onPress: (){});
+    return AppButton(text: "Add event", onPress: (){
+      /*EventDm(
+          ownerId:  ,
+          category: selectedCategory,
+          dateTime: selectedDate,
+          title: titleController.text,
+          description: descriptionController.text,
+           )*/
+    });
   }
 }

@@ -1,4 +1,4 @@
-import 'package:evently/ui/event_dm.dart';
+import 'package:evently/ui/model/event_dm.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
 import 'package:evently/ui/utils/app_styles.dart';
@@ -63,7 +63,7 @@ class EventWidget extends StatelessWidget{
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
         Expanded(child: Text(eventDm.title,style: AppStyles.black14Medium,)),
-        Icon(eventDm.isFavorite ? Icons.favorite:Icons.favorite_border,color: AppColors.blue,),
+        Icon(false ? Icons.favorite:Icons.favorite_border,color: AppColors.blue,),
       ],),
     );
   }
