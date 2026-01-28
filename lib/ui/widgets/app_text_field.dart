@@ -9,8 +9,9 @@ class AppTextField extends StatelessWidget{
   final String hint;
   final bool isPasswordField;
   final int minLines;
+  final TextEditingController? controller;
 
-  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false ,this.minLines=1});
+  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false ,this.minLines=1,this.controller});
   @override
   Widget build(BuildContext context) {
     var border=OutlineInputBorder(
@@ -18,6 +19,7 @@ class AppTextField extends StatelessWidget{
       borderSide: BorderSide(color: AppColors.lightGray,width: 1),
     );
      return TextField(
+       controller: controller,
        decoration: InputDecoration(
          prefixIcon: prefixIcon,
          suffixIcon: suffixIcon,

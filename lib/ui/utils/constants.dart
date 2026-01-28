@@ -3,8 +3,9 @@ import 'package:evently/ui/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 
 abstract final class AppConstants {
+static const defaultErrorMessage="Something went wrong please try again later";
 
-  static CategoryDM all=CategoryDM(name: "all", icon: Icons.border_all_rounded, imagePath: "");
+static CategoryDM all=CategoryDM(name: "all", icon: Icons.border_all_rounded, imagePath: "");
 static  CategoryDM sports=CategoryDM(name: "sports", icon: Icons.bike_scooter, imagePath: AppAssets.sportLight);
 static  CategoryDM bookingClub=CategoryDM(name: "bookingClub", icon: Icons.menu_book, imagePath: AppAssets.bookClubLight);
 static  CategoryDM birthday=CategoryDM(name: "birthday", icon: Icons.cake_outlined, imagePath: AppAssets.birthdayLight);

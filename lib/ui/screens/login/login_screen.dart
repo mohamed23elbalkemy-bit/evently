@@ -4,8 +4,10 @@ import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
 import 'package:evently/ui/utils/app_dialogs.dart';
 import 'package:evently/ui/utils/app_routes.dart';
+import 'package:evently/ui/utils/constants.dart';
 import 'package:evently/ui/widgets/app_button.dart';
 import 'package:evently/ui/widgets/app_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../utils/app_styles.dart';
 class LoginScreen extends StatefulWidget {
@@ -14,6 +16,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final emailController =TextEditingController();
+  final passwordController= TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var localization = AppLocalizations.of(context)!;
@@ -35,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hint: localization.emailHint,
                   isPasswordField: false,
                   prefixIcon: Image.asset(AppAssets.icEmail),
+                  controller: emailController,
                 ),
                 SizedBox(height: 16),
                 AppTextField(
@@ -42,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   isPasswordField: true,
                   prefixIcon: Image.asset(AppAssets.icLock),
                   suffixIcon: Image.asset(AppAssets.icEyeClosed),
+                  controller: passwordController,
                 ),
                 SizedBox(height: 16),
                 InkWell(
@@ -94,10 +101,35 @@ class _LoginScreenState extends State<LoginScreen> {
     return AppButton(text: AppLocalizations.of(context)!.login,
       onPress: () async {
       showLoading(context);
-      await Future.delayed(Duration(seconds: 1));
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: emailController.text,
+            password: passwordController.text
+        );
         Navigator.pop(context);
-        showMessage(context,"Please try again later", title: "Error",negText: "cancel",posText: "ok");
+        Navigator.push(context, AppRoutes.navigationScreen);
+      } on FirebaseAuthException catch (e) {
+        Navigator.pop(context);
+        var message="";
+        if (e.code == 'user-not-found') {
+          message="No user found for that email.";
+        } else if (e.code == 'wrong-password') {
+          message="Wrong password provided for that user.";
+        }
+        else{
+          message=e.message ?? AppConstants.defaultErrorMessage;
+        }
+        showMessage(context, message , title: "Error",posText: "ok");
+      }catch (e) {
+        showMessage(
+          context,
+          AppConstants.defaultErrorMessage,
+          title: "Error",
+          posText: "ok",
+        );
+      }
       },
+
 
 
     );
