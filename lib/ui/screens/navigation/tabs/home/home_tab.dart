@@ -17,6 +17,8 @@ class HomeTab extends StatefulWidget {
 
 class _HomeTabState extends State<HomeTab> {
   List<EventDm> events=[];
+  List<EventDm> filteredEvents=[];
+  var selectedCategory = AppConstants.allCategories[0];
   @override
   void initState() {
     super.initState();
@@ -64,14 +66,24 @@ class _HomeTabState extends State<HomeTab> {
   buildCategoriesTabBar() {
     return CategoriesTabBar(
       categories: AppConstants.allCategories,
-      onChanged: (category) {},
+      onChanged: (category) {
+      selectedCategory =category;
+        if(selectedCategory != AppConstants.all){
+          filteredEvents = events.where((event){
+            return event.category.name == selectedCategory.name;
+          }).toList();
+          }else{
+          filteredEvents=events;
+        }
+        setState(() {});
+      },
     );
   }
 
   buildEventsList() {
     return Expanded(
       child: ListView.builder(
-        itemCount: events.length,
+        itemCount: filteredEvents.length,
         itemBuilder: (context, index) {
           return EventWidget(eventDm: events[index]);
         },
@@ -80,6 +92,7 @@ class _HomeTabState extends State<HomeTab> {
   }
   loadEvents()async{
     events=await getEventsFromFirestore();
+    filteredEvents=events;
     setState(() {});
   }
 }
