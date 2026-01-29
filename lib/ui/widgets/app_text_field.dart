@@ -10,15 +10,16 @@ class AppTextField extends StatelessWidget{
   final bool isPasswordField;
   final int minLines;
   final TextEditingController? controller;
+  final String? Function(String?)? validator;
 
-  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false ,this.minLines=1,this.controller});
+  const AppTextField({super.key, this.prefixIcon, this.suffixIcon, required this.hint , this.isPasswordField=false ,this.minLines=1,this.controller,this.validator});
   @override
   Widget build(BuildContext context) {
     var border=OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
       borderSide: BorderSide(color: AppColors.lightGray,width: 1),
     );
-     return TextField(
+     return TextFormField(
        controller: controller,
        decoration: InputDecoration(
          prefixIcon: prefixIcon,
@@ -33,6 +34,7 @@ class AppTextField extends StatelessWidget{
          fillColor: AppColors.white,
          filled: true,
        ),
+       validator: validator,
        minLines: minLines,
        maxLines: minLines == 1 ? 1 : null,
        obscureText: isPasswordField,
