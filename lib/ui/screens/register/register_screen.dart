@@ -11,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../firebase_utils/firestore_utility.dart';
 import '../../utils/app_routes.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -164,18 +165,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<void> createUserInFirestore(UserDm user) async {
-    var userCollection = FirebaseFirestore.instance.collection("users");
-    var emptyDoc = userCollection.doc(user.id);
-    emptyDoc.set({
-      "id": user.id,
-      "name": user.name,
-      "address": user.address,
-      "phone_number": user.phoneNumber,
-      "email": user.email,
-      "favorites": user.favoriteEvents,
-    });
-  }
 
   AppButton buildRegisterButton(BuildContext context) {
     return AppButton(

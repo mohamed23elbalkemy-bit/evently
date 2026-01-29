@@ -11,6 +11,7 @@ import 'package:evently/ui/widgets/app_button.dart';
 import 'package:evently/ui/widgets/app_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../../../firebase_utils/firestore_utility.dart';
 import '../../utils/app_styles.dart';
 class LoginScreen extends StatefulWidget {
   @override
@@ -136,18 +137,5 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
     );
-  }
-  Future<UserDm> getUserFromFirestore(String uId)async{
-    var userCollection = FirebaseFirestore.instance.collection("users");
-    DocumentSnapshot snapshot = await userCollection.doc(uId).get();
-    Map json =snapshot.data() as Map;
-    UserDm user = UserDm(
-        id: uId,
-        address: json['address'],
-        phoneNumber: json['phone_number'],
-        name: json['name'],
-        email: emailController.text
-    );
-    return user;
   }
 }

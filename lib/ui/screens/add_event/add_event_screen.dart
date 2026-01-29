@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:evently/firebase_utils/firestore_utility.dart';
 import 'package:evently/ui/model/event_dm.dart';
+import 'package:evently/ui/model/user_dm.dart';
 import 'package:evently/ui/utils/app_assets.dart';
 import 'package:evently/ui/utils/app_colors.dart';
+import 'package:evently/ui/utils/app_dialogs.dart';
 import 'package:evently/ui/utils/app_styles.dart';
 import 'package:evently/ui/widgets/app_button.dart';
 import 'package:evently/ui/widgets/categories_tab_bar.dart';
@@ -21,8 +25,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   CategoryDM selectedCategory = AppConstants.customCategories[0];
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
-  TextEditingController titleController= TextEditingController();
-  TextEditingController descriptionController= TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,44 +44,54 @@ class _AddEventScreenState extends State<AddEventScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              Expanded(
-                child: SingleChildScrollView(child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                  Image.asset(
-                    selectedCategory.imagePath,
-                    height: MediaQuery.of(context).size.height * .24,
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Image.asset(
+                          selectedCategory.imagePath,
+                          height: MediaQuery.of(context).size.height * .24,
+                        ),
+                        SizedBox(height: 8),
+                        CategoriesTabBar(
+                          categories: AppConstants.customCategories,
+                          onChanged: (selectedIndex) {
+                            this.selectedCategory = selectedIndex;
+                            setState(() {});
+                          },
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Title",
+                          style: AppStyles.black16Medium,
+                          textAlign: TextAlign.start,
+                        ),
+                        SizedBox(height: 8),
+                        AppTextField(
+                          hint: "Event Title",
+                          controller: titleController,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Description",
+                          style: AppStyles.black16Medium,
+                          textAlign: TextAlign.start,
+                        ),
+                        SizedBox(height: 8),
+                        AppTextField(
+                          hint: "Event Description....",
+                          minLines: 3,
+                          controller: descriptionController,
+                        ),
+                        SizedBox(height: 12),
+                        buildChooseDateRow(),
+                        SizedBox(height: 8),
+                        buildChooseTimeRow(),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: 8),
-                  CategoriesTabBar(
-                    categories: AppConstants.customCategories,
-                    onChanged: (selectedIndex) {
-                      this.selectedCategory = selectedIndex;
-                      setState(() {});
-                    },
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Title",
-                    style: AppStyles.black16Medium,
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(height: 8),
-                  AppTextField(hint: "Event Title",controller: titleController,),
-                  SizedBox(height: 8),
-                  Text(
-                    "Description",
-                    style: AppStyles.black16Medium,
-                    textAlign: TextAlign.start,
-                  ),
-                  SizedBox(height: 8),
-                  AppTextField(hint: "Event Description....", minLines: 3,controller: descriptionController,),
-                  SizedBox(height: 12),
-                  buildChooseDateRow(),
-                  SizedBox(height: 8),
-                  buildChooseTimeRow(),
-                ],),),
-              ),
+                ),
                 buildAddEventButton(),
               ],
             ),
@@ -97,12 +111,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
         Spacer(),
         InkWell(
           onTap: () async {
-            selectedDate = await showDatePicker(
-              context: context,
-              firstDate: DateTime.now(),
-              lastDate: DateTime.now().add(Duration(days: 365)),
-              initialDate: selectedDate
-            ) ?? selectedDate;
+            selectedDate =
+                await showDatePicker(
+                  context: context,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(Duration(days: 365)),
+                  initialDate: selectedDate,
+                ) ??
+                selectedDate;
             setState(() {});
           },
           child: Text(
@@ -125,8 +141,13 @@ class _AddEventScreenState extends State<AddEventScreen> {
         Text(" ${selectedTime.hour}:${selectedTime.minute}"),
         Spacer(),
         InkWell(
-          onTap: () async{
-            selectedTime= await showTimePicker(context: context, initialTime: selectedTime) ?? selectedTime;
+          onTap: () async {
+            selectedTime =
+                await showTimePicker(
+                  context: context,
+                  initialTime: selectedTime,
+                ) ??
+                selectedTime;
             setState(() {});
           },
           child: Text(
@@ -141,14 +162,29 @@ class _AddEventScreenState extends State<AddEventScreen> {
   }
 
   buildAddEventButton() {
-    return AppButton(text: "Add event", onPress: (){
-      /*EventDm(
-          ownerId:  ,
+    return AppButton(
+      text: "Add event",
+      onPress: () async {
+        showLoading(context);
+        selectedDate = DateTime(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+          selectedTime.hour,
+          selectedTime.minute,
+        );
+        EventDm eventDm = EventDm(
+          id: "",
+          ownerId: UserDm.currentUser!.id,
           category: selectedCategory,
           dateTime: selectedDate,
           title: titleController.text,
           description: descriptionController.text,
-           )*/
-    });
+        );
+        await createEventInFirestore(eventDm);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
   }
 }
