@@ -1,5 +1,6 @@
 class UserDm {
   static UserDm? currentUser;
+  static const collectionName = "users";
   String id;
   String name;
   String address;
@@ -17,12 +18,14 @@ class UserDm {
   });
 
   static UserDm fromJson(Map<String, dynamic> json) {
+    List<dynamic> favorites = json["favoriteEventIds"];
     return UserDm(
       id: json["id"],
       address: json["address"],
       phoneNumber: json["phone_number"],
       name: json["name"],
       email: json["email"],
+      favoriteEvents:favorites.map((id) => id.toString()).toList()
     );
   }
 
