@@ -6,8 +6,6 @@ import '../screens/forget_password/forget_password_screen.dart';
 import '../screens/navigation/navigation_screen.dart';
 
 abstract final class AppRoutes {
-  // static MaterialPageRoute registerScreen = MaterialPageRoute(builder: (_) => RegisterScreen());
-  // Other Good Solution
  static MaterialPageRoute get registerScreen{
    return MaterialPageRoute(builder: (_) => RegisterScreen());
  }

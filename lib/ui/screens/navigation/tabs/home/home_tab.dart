@@ -20,16 +20,32 @@ class _HomeTabState extends State<HomeTab> {
   List<EventDm> filteredEvents=[];
   var selectedCategory = AppConstants.allCategories[0];
   @override
-  void initState() {
-    super.initState();
-    loadEvents();
-  }
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
-        children: [buildHeader(), buildCategoriesTabBar(), buildEventsList()],
+        children: [
+          buildHeader(),
+          StreamBuilder(stream: getEventsFromFirestore(),
+              builder: (context,snapshot){
+            if(snapshot.hasError){
+              return Center(child: Text(snapshot.error.toString()),);
+            }else if(snapshot.hasData){
+              events= snapshot.data!;
+              filterEvents();
+              return Expanded(
+                child: Column(
+                  children: [
+                    buildCategoriesTabBar(),
+                    buildEventsList()
+                  ],),
+              );
+            }else{
+              return Center(child: CircularProgressIndicator());
+            }
+
+          }),
+         ],
       ),
     );
   }
@@ -68,16 +84,20 @@ class _HomeTabState extends State<HomeTab> {
       categories: AppConstants.allCategories,
       onChanged: (category) {
       selectedCategory =category;
-        if(selectedCategory != AppConstants.all){
-          filteredEvents = events.where((event){
-            return event.category.name == selectedCategory.name;
-          }).toList();
-          }else{
-          filteredEvents=events;
-        }
-        setState(() {});
+      setState(() {});
       },
     );
+  }
+
+  void filterEvents() {
+     if(selectedCategory != AppConstants.all){
+      filteredEvents = events.where((event){
+        return event.category.name == selectedCategory.name;
+      }).toList();
+      }else{
+      filteredEvents=events;
+    }
+
   }
 
   buildEventsList() {
@@ -85,14 +105,10 @@ class _HomeTabState extends State<HomeTab> {
       child: ListView.builder(
         itemCount: filteredEvents.length,
         itemBuilder: (context, index) {
-          return EventWidget(eventDm: events[index]);
+          return EventWidget(eventDm: filteredEvents[index]);
         },
       ),
     );
   }
-  loadEvents()async{
-    events=await getEventsFromFirestore();
-    filteredEvents=events;
-    setState(() {});
-  }
+
 }

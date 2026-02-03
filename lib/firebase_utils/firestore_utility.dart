@@ -28,11 +28,13 @@ createEventInFirestore(EventDm event) async {
   await documentRef.set(event.toJson(event));
 }
 
-Future<List<EventDm>> getEventsFromFirestore()async{
+Stream<List<EventDm>> getEventsFromFirestore(){
   CollectionReference collection = FirebaseFirestore.instance.collection("events");
-  QuerySnapshot querySnapshot = await collection.get();
-  return querySnapshot.docs.map((doc){
-    var json = doc.data() as Map<String , dynamic>;
-    return EventDm.fromJson(json);
-  }).toList();
+  Stream<QuerySnapshot> stream =   collection.snapshots();
+  return stream.map((querySnapshot){
+    return querySnapshot.docs.map((doc){
+      var json = doc.data() as Map<String , dynamic>;
+      return EventDm.fromJson(json);
+    }).toList();
+  });
 }
