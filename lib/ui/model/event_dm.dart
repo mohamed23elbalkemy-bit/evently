@@ -34,7 +34,7 @@ class EventDm {
       id: json["id"],
       ownerId: json["ownerId"],
       category: CategoryDM.formJson(json["category"]),
-      dateTime: timeStamp.toDate(),
+      dateTime: timeStamp == null ? DateTime.now() : timeStamp.toDate(),
       title: json["title"],
       description: json["description"],
     );

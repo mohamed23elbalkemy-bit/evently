@@ -29,7 +29,7 @@ createEventInFirestore(EventDm event) async {
 }
 
 Stream<List<EventDm>> getEventsFromFirestore(){
-  CollectionReference collection = FirebaseFirestore.instance.collection(UserDm.collectionName);
+  CollectionReference collection = FirebaseFirestore.instance.collection("events");
   Stream<QuerySnapshot> stream =   collection.snapshots();
   return stream.map((querySnapshot){
     return querySnapshot.docs.map((doc){
@@ -46,7 +46,7 @@ addEventToFavorite(String eventId,UserDm user){
   favoriteEvents.add(eventId);
   user.favoriteEvents = favoriteEvents;
   docRef.update({
-    "favoriteEventIds" : favoriteEvents
+    "favorites" : favoriteEvents
   });
 }
 
@@ -55,13 +55,14 @@ removeEventFromFavorite(String eventId,UserDm user){
   var docRef = userCollection.doc(user.id);
   user.favoriteEvents.remove(eventId);
   docRef.update({
-    "favoriteEventIds" : user.favoriteEvents
+    "favorites" : user.favoriteEvents
   });
 }
 
 Future <List<EventDm>> getFavoriteEventsForUser(String uid) async {
   if(UserDm.currentUser!.favoriteEvents.isEmpty) return [];
-  CollectionReference eventCollection = FirebaseFirestore.instance.collection(UserDm.collectionName);
+  CollectionReference eventCollection =
+  FirebaseFirestore.instance.collection("events");
   QuerySnapshot querySnapshot = await eventCollection.where("id",whereIn: UserDm.currentUser!.favoriteEvents).get();
     return querySnapshot.docs.map((doc){
       var json = doc.data() as Map<String , dynamic>;
