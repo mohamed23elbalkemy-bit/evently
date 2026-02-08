@@ -22,18 +22,21 @@ class _ProfileTabState extends State<ProfileTab> {
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
+          SizedBox(height: 12),
           CircleAvatar(
             child: Image.asset(AppAssets.routeLogoDark),
             minRadius: 80,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.offWhite,
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 8),
           Text(UserDm.currentUser!.name, style: AppStyles.black20Medium),
-          SizedBox(height: 12),
+          SizedBox(height: 8),
           Text(UserDm.currentUser!.email, style: AppStyles.black16Medium),
-          SizedBox(height: 12),
+          SizedBox(height: 40),
           buildThemeRow(),
+          SizedBox(height: 16),
           buildLanguageRow(),
+          SizedBox(height: 16),
           buildLogoutRow(),
         ],
       ),
@@ -41,7 +44,23 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   buildThemeRow() {
-    return Container();
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Row(
+        children: [
+          Text("Dark mode",style: AppStyles.black16Medium,),
+          Spacer(),
+          Switch(
+             value: false,
+            onChanged: (value) {},
+          ),
+        ],
+      ),
+    );
   }
 
   late LanguageProvider provider;
@@ -54,7 +73,7 @@ class _ProfileTabState extends State<ProfileTab> {
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: Row(
         children: [
-          Text("Language"),
+          Text("Language",style: AppStyles.black16Medium,),
           Spacer(),
           Switch(
             value: LanguageProvider.currentLocale == "ar",
@@ -68,6 +87,21 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   buildLogoutRow() {
-    return Container();
+    return Container(
+      height: 65,
+      width: 350,
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      child: Row(
+        children: [
+          Text("Logout",style: AppStyles.black16Medium,),
+          Spacer(),
+          Icon(Icons.logout,color: AppColors.red,)
+        ],
+      ),
+    );
   }
 }
