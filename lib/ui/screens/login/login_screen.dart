@@ -13,6 +13,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../firebase_utils/firestore_utility.dart';
 import '../../utils/app_styles.dart';
+import 'google_auth_service.dart';
+
+
 class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -87,11 +90,49 @@ class _LoginScreenState extends State<LoginScreen> {
                 Text(localization.or,style: AppStyles.blue18Medium,textAlign: TextAlign.center,),
                 SizedBox(height: 37),
                 AppButton(
-                    text: localization.googleLogin, onPress: (){},
+                  text: localization.googleLogin,
                   backgroundColor: AppColors.white,
                   textStyle: AppStyles.blue18Medium,
                   icon: Image.asset(AppAssets.icGmail),
-                )
+                  onPress: () async {
+                    showLoading(context);
+                    try {
+                      final credential =
+                      await GoogleAuthService.signInWithGoogle();
+
+                      if (credential == null) {
+                        Navigator.pop(context);
+                        return;
+                      }
+
+                      final firebaseUser = credential.user!;
+
+                      final user = await addGoogleUserToFirestore(
+                        uid: firebaseUser.uid,
+                        email: firebaseUser.email ?? '',
+                        name: firebaseUser.displayName ?? 'Google User',
+                      );
+
+                      UserDm.currentUser = user;
+
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        AppRoutes.navigationScreen,
+                      );
+                    } catch (e) {
+                      Navigator.pop(context);
+                      showMessage(
+                        context,
+                        e.toString(),
+                        title: "Error",
+                        posText: "ok",
+                      );
+                    }
+                  },
+                ),
+
+
               ],
             ),
           ),

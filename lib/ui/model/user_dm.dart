@@ -18,7 +18,7 @@ class UserDm {
   });
 
   static UserDm fromJson(Map<String, dynamic> json) {
-    List<dynamic> favorites = json["favoriteEventIds"];
+    List<dynamic> favorites = json["favorites"] ?? [];
     return UserDm(
       id: json["id"],
       address: json["address"],

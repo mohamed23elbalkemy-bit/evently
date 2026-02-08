@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently/ui/model/event_dm.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../ui/model/user_dm.dart';
 import '../ui/model/user_dm.dart';
 
 
@@ -67,3 +68,32 @@ Future <List<EventDm>> getFavoriteEventsForUser(String uid) async {
       return EventDm.fromJson(json);
     }).toList();
 }
+
+Future<UserDm> addGoogleUserToFirestore({
+  required String uid,
+  required String email,
+  required String name,
+}) async {
+  final usersCollection =
+  FirebaseFirestore.instance.collection(UserDm.collectionName);
+
+  final docRef = usersCollection.doc(uid);
+  final snapshot = await docRef.get();
+
+  if (snapshot.exists) {
+    return UserDm.fromJson(snapshot.data()!);
+  } else {
+    final user = UserDm(
+      id: uid,
+      name: name,
+      email: email,
+      address: "",
+      phoneNumber: "",
+      favoriteEvents: [],
+    );
+
+    await docRef.set(user.toJson());
+    return user;
+  }
+}
+
